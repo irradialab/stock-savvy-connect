@@ -19,12 +19,14 @@ const CompanySelector = ({ onCompanyChange }: CompanySelectorProps) => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
+        setLoading(true);
+        // Fetch companies from the Supabase 'companies' table
         const { data, error } = await supabase
           .from('companies')
           .select('company_id, name');
 
         if (error) {
-          console.error('Error fetching companies:', error);
+          console.error('Error al cargar las compañías:', error);
           return;
         }
 
@@ -35,7 +37,7 @@ const CompanySelector = ({ onCompanyChange }: CompanySelectorProps) => {
           onCompanyChange(data[0].company_id);
         }
       } catch (error) {
-        console.error('Error fetching companies:', error);
+        console.error('Error al cargar las compañías:', error);
       } finally {
         setLoading(false);
       }
@@ -64,7 +66,7 @@ const CompanySelector = ({ onCompanyChange }: CompanySelectorProps) => {
         <SelectContent>
           {companies.map((company) => (
             <SelectItem key={company.company_id} value={company.company_id.toString()}>
-              {company.name}
+              {company.name || `Compañía ${company.company_id}`}
             </SelectItem>
           ))}
         </SelectContent>
