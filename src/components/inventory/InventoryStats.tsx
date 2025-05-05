@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowUpCircleIcon, ArrowDownCircleIcon } from "@radix-ui/react-icons";
+import { ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 import { Boxes, Truck, AlertTriangle, TrendingUp } from "lucide-react";
 
 const InventoryStats = () => {
@@ -51,9 +51,9 @@ const InventoryStats = () => {
             </div>
             <div className="flex items-center mt-4 text-xs">
               {stat.positive ? (
-                <ArrowUpCircleIcon className="h-4 w-4 text-green-500 mr-1" />
+                <ArrowUpIcon className="h-4 w-4 text-green-500 mr-1" />
               ) : (
-                <ArrowDownCircleIcon className="h-4 w-4 text-red-500 mr-1" />
+                <ArrowDownIcon className="h-4 w-4 text-red-500 mr-1" />
               )}
               <span className={stat.positive ? "text-green-600" : "text-red-600"}>
                 {stat.change} from last month

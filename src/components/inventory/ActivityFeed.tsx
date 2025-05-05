@@ -1,6 +1,5 @@
 
-import { CheckCircledIcon, CrossCircledIcon, PlusCircledIcon, MinusCircledIcon } from "@radix-ui/react-icons";
-import { Truck } from "lucide-react";
+import { CheckCircle, XCircle, PlusCircle, MinusCircle, Truck } from "lucide-react";
 
 interface ActivityItem {
   id: number;
@@ -68,13 +67,13 @@ const ActivityItem = ({ activity }: { activity: ActivityItem }) => {
   const getIcon = () => {
     switch (activity.type) {
       case "incoming":
-        return <PlusCircledIcon className="h-5 w-5 text-green-500" />;
+        return <PlusCircle className="h-5 w-5 text-green-500" />;
       case "outgoing":
-        return <MinusCircledIcon className="h-5 w-5 text-red-500" />;
+        return <MinusCircle className="h-5 w-5 text-red-500" />;
       case "adjustment":
         return activity.quantity > 0 
-          ? <CheckCircledIcon className="h-5 w-5 text-blue-500" />
-          : <CrossCircledIcon className="h-5 w-5 text-orange-500" />;
+          ? <CheckCircle className="h-5 w-5 text-blue-500" />
+          : <XCircle className="h-5 w-5 text-orange-500" />;
       case "order":
         return <Truck className="h-5 w-5 text-purple-500" />;
       default:

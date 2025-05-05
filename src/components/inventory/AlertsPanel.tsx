@@ -1,6 +1,6 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { AlertTriangle } from "lucide-react";
 
 interface InventoryAlert {
   id: number;
@@ -42,7 +42,7 @@ const AlertsPanel = () => {
       ) : (
         alerts.map((alert) => (
           <Alert key={alert.id} variant="destructive" className="bg-red-50 border-red-200 text-red-800">
-            <ExclamationTriangleIcon className="h-4 w-4" />
+            <AlertTriangle className="h-4 w-4" />
             <AlertTitle className="text-sm font-semibold">Low Stock Alert: {alert.itemName}</AlertTitle>
             <AlertDescription className="text-xs">
               Current stock: {alert.currentStock} (below threshold of {alert.threshold})

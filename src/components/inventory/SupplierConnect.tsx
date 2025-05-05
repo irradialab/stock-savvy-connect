@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
+import { Star, StarIcon } from "lucide-react";
 
 interface Supplier {
   id: number;
@@ -59,7 +59,7 @@ const SupplierCard = ({ supplier }: { supplier: Supplier }) => {
           <div className="flex items-center gap-2">
             <h3 className="font-medium">{supplier.name}</h3>
             {supplier.isFavorite && (
-              <StarFilledIcon className="h-4 w-4 text-yellow-400" />
+              <StarIcon className="h-4 w-4 text-yellow-400 fill-yellow-400" />
             )}
           </div>
           <div className="text-xs text-gray-500 mt-1">
@@ -67,7 +67,7 @@ const SupplierCard = ({ supplier }: { supplier: Supplier }) => {
           </div>
         </div>
         <div className="flex items-center text-sm">
-          <StarIcon className="h-4 w-4 text-yellow-400 mr-1" />
+          <Star className="h-4 w-4 text-yellow-400 mr-1" />
           <span>{supplier.rating}</span>
         </div>
       </div>
