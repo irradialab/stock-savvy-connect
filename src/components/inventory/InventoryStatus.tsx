@@ -1,17 +1,23 @@
-
 import { useState, useEffect } from "react";
-import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-
-interface InventoryItemProps {
-  name: string;
-  currentStock: number;
-  capacity: number;
-  category: string;
-  unitOfMeasure: string;
-  needsReorder: boolean;
-  predictedDaysLeft: number | null;
-}
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search, ArrowUpDown } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Product {
   product_id: string;
@@ -31,9 +37,15 @@ interface InventoryStatusProps {
   activeTab: string;
 }
 
+type StockStatus = 'all' | 'normal' | 'low';
+
 const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
-  const [inventoryItems, setInventoryItems] = useState<InventoryItemProps[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [stockStatus, setStockStatus] = useState<StockStatus>('all');
+  const [sortField, setSortField] = useState<keyof Product>('name');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     if (!companyId) return;
@@ -41,103 +53,188 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        let query = supabase
+        const { data, error } = await supabase
           .from('products')
           .select('*')
           .eq('company_id', companyId);
 
-        // Filtrar según la pestaña activa
-        if (activeTab === 'low') {
-          query = query.eq('needs_reorder_flag', true);
-        } 
-        // Se podrían añadir más filtros por categoría aquí
-
-        const { data, error } = await query;
-
         if (error) {
-          console.error('Error fetching products:', error);
+          console.error('Error al cargar productos:', error);
           return;
         }
 
-        // Transformamos los productos a formato InventoryItem
-        const items = (data || []).map((product: Product) => ({
-          name: product.name || 'Producto sin nombre',
-          currentStock: product.current_stock || 0,
-          capacity: product.reorder_threshold_days ? product.current_stock + 50 : 100, // Estimación para la barra de progreso
-          category: product.description || 'General',
-          unitOfMeasure: product.unit_of_measure || 'unidad',
-          needsReorder: product.needs_reorder_flag || false,
-          predictedDaysLeft: product.predicted_days_left
-        }));
-
-        setInventoryItems(items);
+        setProducts(data || []);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error al cargar productos:', error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, [companyId, activeTab]);
+  }, [companyId]);
+
+  const handleSort = (field: keyof Product) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const filteredProducts = products
+    .filter(product => {
+      // Filtro por búsqueda
+      const matchesSearch = 
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchTerm.toLowerCase());
+
+      // Filtro por estado
+      const matchesStatus = 
+        stockStatus === 'all' ||
+        (stockStatus === 'low' && product.needs_reorder_flag) ||
+        (stockStatus === 'normal' && !product.needs_reorder_flag);
+
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+      
+      if (aValue === null) return 1;
+      if (bValue === null) return -1;
+      
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortDirection === 'asc' 
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+      
+      return sortDirection === 'asc'
+        ? (aValue as number) - (bValue as number)
+        : (bValue as number) - (aValue as number);
+    });
 
   if (loading) {
-    return <div className="py-4 text-center">Cargando inventario...</div>;
+    return <div className="py-4 text-center">Cargando productos...</div>;
   }
 
-  if (inventoryItems.length === 0) {
+  if (products.length === 0) {
     return <div className="py-4 text-center">No hay productos disponibles</div>;
   }
 
   return (
     <div className="space-y-4">
-      {inventoryItems.map((item, index) => (
-        <InventoryItem key={index} {...item} />
-      ))}
-    </div>
-  );
-};
-
-const InventoryItem = ({ 
-  name, 
-  currentStock, 
-  capacity, 
-  category, 
-  unitOfMeasure,
-  needsReorder,
-  predictedDaysLeft 
-}: InventoryItemProps) => {
-  const percentage = Math.round((currentStock / capacity) * 100);
-  
-  let progressColor = "bg-inventory-success";
-  if (percentage < 25 || needsReorder) {
-    progressColor = "bg-inventory-danger";
-  } else if (percentage < 50) {
-    progressColor = "bg-inventory-warning";
-  }
-
-  return (
-    <div className="space-y-2">
-      <div className="flex justify-between items-center">
-        <div>
-          <h4 className="font-medium text-sm">{name}</h4>
-          <p className="text-xs text-gray-500">{category}</p>
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar por nombre, SKU o descripción..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-8"
+          />
         </div>
-        <div className="text-sm">
-          {currentStock} {unitOfMeasure}
-          {needsReorder && (
-            <span className="ml-2 text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">
-              ¡Reordenar!
-            </span>
-          )}
-          {predictedDaysLeft !== null && (
-            <span className="ml-2 text-xs text-gray-500">
-              ({predictedDaysLeft} días restantes)
-            </span>
-          )}
-        </div>
+        <Select
+          value={stockStatus}
+          onValueChange={(value: StockStatus) => setStockStatus(value)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filtrar por estado" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos los estados</SelectItem>
+            <SelectItem value="normal">Stock Normal</SelectItem>
+            <SelectItem value="low">Bajo Stock</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      <Progress value={percentage} className={`h-2 ${progressColor}`} />
+
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('name')}
+                  className="flex items-center gap-1"
+                >
+                  Nombre
+                  <ArrowUpDown className="h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('sku')}
+                  className="flex items-center gap-1"
+                >
+                  SKU
+                  <ArrowUpDown className="h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('current_stock')}
+                  className="flex items-center gap-1"
+                >
+                  Stock Actual
+                  <ArrowUpDown className="h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('unit_of_measure')}
+                  className="flex items-center gap-1"
+                >
+                  Unidad
+                  <ArrowUpDown className="h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleSort('predicted_days_left')}
+                  className="flex items-center gap-1"
+                >
+                  Días Restantes
+                  <ArrowUpDown className="h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>Estado</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredProducts.map((product) => (
+              <TableRow key={product.product_id}>
+                <TableCell className="font-medium">{product.name}</TableCell>
+                <TableCell>{product.sku}</TableCell>
+                <TableCell>{product.current_stock}</TableCell>
+                <TableCell>{product.unit_of_measure}</TableCell>
+                <TableCell>
+                  {product.predicted_days_left !== null 
+                    ? `${product.predicted_days_left} días`
+                    : 'N/A'}
+                </TableCell>
+                <TableCell>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    product.needs_reorder_flag
+                      ? 'bg-red-100 text-red-800'
+                      : 'bg-green-100 text-green-800'
+                  }`}>
+                    {product.needs_reorder_flag ? 'Bajo Stock' : 'Normal'}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

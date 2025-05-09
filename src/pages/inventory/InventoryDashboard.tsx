@@ -79,9 +79,8 @@ const InventoryDashboard = () => {
               <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
                 <TabsList>
                   <TabsTrigger value="all">Todos los Productos</TabsTrigger>
-                  <TabsTrigger value="low">Bajo Stock</TabsTrigger>
-                  <TabsTrigger value="electronics">Electrónicos</TabsTrigger>
-                  <TabsTrigger value="storage">Almacenamiento</TabsTrigger>
+                  
+                  
                 </TabsList>
               </Tabs>
               <Button size="sm" variant="ghost" className="ml-2">
