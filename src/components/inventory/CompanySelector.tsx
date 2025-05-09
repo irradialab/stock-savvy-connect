@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,25 +14,26 @@ interface CompanySelectorProps {
 const CompanySelector = ({ onCompanyChange }: CompanySelectorProps) => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCompany, setSelectedCompany] = useState<string>('');
 
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
         setLoading(true);
-        // Fetch companies from the Supabase 'companies' table
         const { data, error } = await supabase
           .from('companies')
-          .select('company_id, name');
+          .select('company_id, name')
+          .order('name');
 
         if (error) {
           console.error('Error al cargar las compañías:', error);
           return;
         }
 
-        setCompanies(data || []);
-        
-        // Seleccionar la primera compañía por defecto si hay compañías
         if (data && data.length > 0) {
+          setCompanies(data);
+          const defaultCompanyId = data[0].company_id.toString();
+          setSelectedCompany(defaultCompanyId);
           onCompanyChange(data[0].company_id);
         }
       } catch (error) {
@@ -44,7 +44,12 @@ const CompanySelector = ({ onCompanyChange }: CompanySelectorProps) => {
     };
 
     fetchCompanies();
-  }, [onCompanyChange]);
+  }, []);
+
+  const handleCompanyChange = (value: string) => {
+    setSelectedCompany(value);
+    onCompanyChange(parseInt(value));
+  };
 
   if (loading) {
     return <div>Cargando compañías...</div>;
@@ -57,8 +62,8 @@ const CompanySelector = ({ onCompanyChange }: CompanySelectorProps) => {
   return (
     <div className="w-full md:w-64">
       <Select 
-        onValueChange={(value) => onCompanyChange(parseInt(value))}
-        defaultValue={companies[0]?.company_id.toString()}
+        value={selectedCompany}
+        onValueChange={handleCompanyChange}
       >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Seleccionar compañía" />

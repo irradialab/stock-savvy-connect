@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardCard from "@/components/inventory/DashboardCard";
@@ -10,10 +9,36 @@ import SupplierConnect from "@/components/inventory/SupplierConnect";
 import InventoryStats from "@/components/inventory/InventoryStats";
 import CompanySelector from "@/components/inventory/CompanySelector";
 import { Download, Filter, Plus, RefreshCcw } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const InventoryDashboard = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [selectedCompanyId, setSelectedCompanyId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchInitialCompany = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('companies')
+          .select('company_id')
+          .limit(1)
+          .single();
+
+        if (error) {
+          console.error('Error al cargar la compañía inicial:', error);
+          return;
+        }
+
+        if (data) {
+          setSelectedCompanyId(data.company_id);
+        }
+      } catch (error) {
+        console.error('Error al cargar la compañía inicial:', error);
+      }
+    };
+
+    fetchInitialCompany();
+  }, []);
 
   const handleCompanyChange = (companyId: number) => {
     setSelectedCompanyId(companyId);
