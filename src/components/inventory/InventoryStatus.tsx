@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, ArrowUpDown } from "lucide-react";
+import { Search, ArrowUpDown, ShoppingCart } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -18,6 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface Product {
   product_id: string;
@@ -46,6 +49,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
   const [stockStatus, setStockStatus] = useState<StockStatus>('all');
   const [sortField, setSortField] = useState<keyof Product>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!companyId) return;
@@ -81,6 +85,44 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
       setSortField(field);
       setSortDirection('asc');
     }
+  };
+
+  const handleAddToCart = (product: Product) => {
+    // Store the product in localStorage to pass it to the cart
+    const cartItem = {
+      id: product.product_id,
+      name: product.name,
+      quantity: 1,
+      unitPrice: 0, // This will be updated from supplier info
+      sku: product.sku,
+      unit_of_measure: product.unit_of_measure
+    };
+    
+    // Get current cart items or initialize empty array
+    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    // Check if product already exists in cart
+    const existingItemIndex = currentCart.findIndex((item: any) => item.id === product.product_id);
+    
+    if (existingItemIndex >= 0) {
+      // Product exists, increase quantity
+      currentCart[existingItemIndex].quantity += 1;
+      toast.success("Product quantity updated in cart", {
+        description: `${product.name} quantity increased`
+      });
+    } else {
+      // Add new product to cart
+      currentCart.push(cartItem);
+      toast.success("Product added to cart", {
+        description: `${product.name} added to your order`
+      });
+    }
+    
+    // Save updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(currentCart));
+    
+    // Navigate to orders page
+    navigate('/orders');
   };
 
   const filteredProducts = products
@@ -207,6 +249,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                 </Button>
               </TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -229,6 +272,17 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                   }`}>
                     {product.needs_reorder_flag ? 'Low' : 'Normal'}
                   </span>
+                </TableCell>
+                <TableCell>
+                  <Button 
+                    size="sm" 
+                    variant="ghost"
+                    onClick={() => handleAddToCart(product)}
+                    className="text-inventory-teal hover:bg-inventory-teal/20 hover:text-white"
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-1" />
+                    Order
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

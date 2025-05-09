@@ -4,6 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle, ShoppingCart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface InventoryAlert {
   product_id: string;
@@ -21,6 +22,7 @@ interface AlertsPanelProps {
 const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
   const [alerts, setAlerts] = useState<InventoryAlert[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!companyId) return;
@@ -50,6 +52,38 @@ const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
     fetchAlerts();
   }, [companyId]);
 
+  const handleAddToCart = (product: InventoryAlert) => {
+    // Store the product in localStorage to pass it to the cart
+    const cartItem = {
+      id: product.product_id,
+      name: product.name,
+      quantity: 1,
+      unitPrice: 0, // This will be updated from supplier info
+      sku: product.sku,
+      unit_of_measure: product.unit_of_measure
+    };
+    
+    // Get current cart items or initialize empty array
+    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    // Check if product already exists in cart
+    const existingItemIndex = currentCart.findIndex((item: any) => item.id === product.product_id);
+    
+    if (existingItemIndex >= 0) {
+      // Product exists, increase quantity
+      currentCart[existingItemIndex].quantity += 1;
+    } else {
+      // Add new product to cart
+      currentCart.push(cartItem);
+    }
+    
+    // Save updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(currentCart));
+    
+    // Navigate to orders page
+    navigate('/orders');
+  };
+
   if (loading) {
     return <div className="text-center py-4 text-gray-300">Loading alerts...</div>;
   }
@@ -76,6 +110,7 @@ const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
                 <Button 
                   size="sm" 
                   className="mt-2 bg-red-600 hover:bg-red-700 text-white shadow-[0_0_10px_rgba(239,68,68,0.3)]"
+                  onClick={() => handleAddToCart(alert)}
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Order Product
