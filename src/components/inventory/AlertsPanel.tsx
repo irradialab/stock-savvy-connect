@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, ShoppingCart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 interface InventoryAlert {
   product_id: string;
@@ -68,10 +69,17 @@ const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
               <AlertTitle className="text-sm font-semibold">
                 Stock Agotado: {alert.name}
               </AlertTitle>
-              <AlertDescription className="text-xs space-y-1">
+              <AlertDescription className="text-xs space-y-2">
                 <div>SKU: {alert.sku}</div>
                 <div>Stock actual: {alert.current_stock} {alert.unit_of_measure}</div>
                 <div className="font-semibold">¡Se requiere reordenar inmediatamente!</div>
+                <Button 
+                  size="sm" 
+                  className="mt-2 bg-red-600 hover:bg-red-700 text-white"
+                >
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Ordenar Producto
+                </Button>
               </AlertDescription>
             </Alert>
           ))}
