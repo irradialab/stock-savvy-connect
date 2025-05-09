@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -23,7 +23,7 @@ const LoginForm = () => {
     setError(null);
 
     try {
-      // Primero verificamos si el usuario existe en la tabla users
+      // First verify if the user exists in the users table
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('*')
@@ -31,20 +31,20 @@ const LoginForm = () => {
         .single();
 
       if (userError || !userData) {
-        setError("Usuario no encontrado. Por favor verifique su correo electrónico.");
+        setError("User not found. Please verify your email address.");
         setLoading(false);
         return;
       }
 
-      // Si el usuario existe, intentamos autenticarlo
+      // If user exists, attempt to authenticate
       if (userData.password === password) {
-        // Inicio de sesión exitoso, redirigimos al dashboard
+        // Successful login, redirect to dashboard
         toast({
-          title: "Inicio de sesión exitoso",
-          description: `Bienvenido de nuevo, ${email}`,
+          title: "Login successful",
+          description: `Welcome back, ${email}`,
         });
         
-        // Guardamos la información del usuario en localStorage para mantener la sesión
+        // Store user information in localStorage to maintain session
         localStorage.setItem('user', JSON.stringify({
           email: userData.email,
           company_id: userData.company_id,
@@ -53,27 +53,27 @@ const LoginForm = () => {
         
         navigate("/inventory");
       } else {
-        setError("Contraseña incorrecta. Por favor inténtelo de nuevo.");
+        setError("Incorrect password. Please try again.");
       }
     } catch (err) {
-      console.error("Error de inicio de sesión:", err);
-      setError("Error al iniciar sesión. Por favor inténtelo de nuevo más tarde.");
+      console.error("Login error:", err);
+      setError("Error logging in. Please try again later.");
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
+    <div className="w-full max-w-md p-8 space-y-8 bg-black/60 backdrop-blur-md rounded-lg border border-inventory-teal/20 shadow-[0_0_20px_rgba(51,195,240,0.2)]">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-inventory-blue">Iniciar Sesión</h2>
-        <p className="mt-2 text-sm text-inventory-gray">
-          Ingrese sus credenciales para acceder al sistema
+        <h2 className="text-2xl font-bold text-inventory-teal">Login</h2>
+        <p className="mt-2 text-sm text-inventory-light-blue">
+          Enter your credentials to access the system
         </p>
       </div>
 
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="bg-red-900/50 border-red-800">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -81,22 +81,22 @@ const LoginForm = () => {
       <form onSubmit={handleLogin} className="mt-8 space-y-6">
         <div className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-inventory-gray">
-              Correo Electrónico
+            <label htmlFor="email" className="block text-sm font-medium text-inventory-light-blue">
+              Email Address
             </label>
             <Input
               id="email"
               type="email"
-              placeholder="correo@ejemplo.com"
+              placeholder="email@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1"
+              className="mt-1 bg-black/50 border-inventory-teal/30 focus-visible:ring-inventory-teal"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-inventory-gray">
-              Contraseña
+            <label htmlFor="password" className="block text-sm font-medium text-inventory-light-blue">
+              Password
             </label>
             <div className="relative mt-1">
               <Input
@@ -106,7 +106,7 @@ const LoginForm = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pr-10"
+                className="pr-10 bg-black/50 border-inventory-teal/30 focus-visible:ring-inventory-teal"
               />
               <button
                 type="button"
@@ -114,9 +114,9 @@ const LoginForm = () => {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-inventory-gray" />
+                  <EyeOff className="h-4 w-4 text-inventory-light-blue" />
                 ) : (
-                  <Eye className="h-4 w-4 text-inventory-gray" />
+                  <Eye className="h-4 w-4 text-inventory-light-blue" />
                 )}
               </button>
             </div>
@@ -126,9 +126,19 @@ const LoginForm = () => {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full py-2 px-4 bg-inventory-teal hover:bg-inventory-teal/90"
+          className="w-full py-2 px-4 bg-inventory-teal hover:bg-inventory-teal/90 shadow-[0_0_10px_rgba(51,195,240,0.4)] transition-all duration-300"
         >
-          {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+          {loading ? (
+            <div className="flex items-center">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              <span>Logging in...</span>
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <LogIn className="h-4 w-4 mr-2" />
+              <span>Login</span>
+            </div>
+          )}
         </Button>
       </form>
     </div>

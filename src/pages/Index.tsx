@@ -10,61 +10,61 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Verificamos si el usuario ya está autenticado
+    // Check if the user is already authenticated
     const user = localStorage.getItem('user');
     setIsAuthenticated(!!user);
     
-    // Si ya está autenticado, redirigimos al dashboard
+    // If already authenticated, redirect to dashboard
     if (user) {
       navigate('/inventory');
     }
   }, [navigate]);
 
-  // Mientras verificamos la autenticación
+  // While verifying authentication
   if (isAuthenticated === null) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-black">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-inventory-teal"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
-      {/* Sección de Login (derecha en desktop, arriba en móvil) */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-6 bg-inventory-light-blue">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-inventory-blue to-black text-white">
+      {/* Login Section (right on desktop, top on mobile) */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-6 backdrop-blur-md bg-black/30">
         <LoginForm />
       </div>
       
-      {/* Sección de Presentación (izquierda en desktop, abajo en móvil) */}
-      <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-6 bg-white text-center">
+      {/* Presentation Section (left on desktop, bottom on mobile) */}
+      <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-6 bg-gradient-to-r from-black/80 to-inventory-blue/40 backdrop-blur-sm text-center">
         <div className="max-w-xl">
-          <div className="inline-block p-4 bg-inventory-teal rounded-full mb-6">
+          <div className="inline-block p-4 bg-inventory-teal rounded-full mb-6 shadow-[0_0_15px_rgba(51,195,240,0.7)]">
             <Boxes className="h-12 w-12 text-white" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-inventory-blue mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight text-glow">
             Stock Savvy Connect
           </h1>
-          <p className="text-xl md:text-2xl text-inventory-gray mb-8">
-            Sistema inteligente para gestionar inventario con IA
+          <p className="text-xl md:text-2xl text-inventory-light-blue mb-8">
+            AI-Powered Inventory Management System
           </p>
 
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <FeatureCard 
-              title="Inventario en Tiempo Real" 
-              description="Monitoree niveles de stock y reciba alertas de inventario bajo" 
+              title="Real-Time Inventory" 
+              description="Monitor stock levels and receive low inventory alerts" 
             />
             <FeatureCard 
-              title="Red de Proveedores" 
-              description="Conéctese directamente con proveedores de confianza" 
+              title="Supplier Network" 
+              description="Connect directly with trusted suppliers" 
             />
             <FeatureCard 
-              title="Predicciones con IA" 
-              description="Optimice sus pedidos con predicciones inteligentes" 
+              title="AI Predictions" 
+              description="Optimize orders with intelligent forecasting" 
             />
             <FeatureCard 
-              title="Acceso Móvil" 
-              description="Acceda a sus datos de inventario desde cualquier lugar" 
+              title="Mobile Access" 
+              description="Access your inventory data from anywhere" 
             />
           </div>
         </div>
@@ -75,9 +75,9 @@ const Index = () => {
 
 const FeatureCard = ({ title, description }: { title: string; description: string }) => {
   return (
-    <div className="bg-inventory-light-blue p-6 rounded-lg shadow-sm">
-      <h3 className="text-lg font-semibold text-inventory-blue mb-2">{title}</h3>
-      <p className="text-inventory-gray text-sm">{description}</p>
+    <div className="bg-black/40 backdrop-blur-md border border-inventory-teal/30 p-6 rounded-lg hover:shadow-[0_0_15px_rgba(51,195,240,0.3)] transition-all duration-300 hover:-translate-y-1">
+      <h3 className="text-lg font-semibold text-inventory-teal mb-2">{title}</h3>
+      <p className="text-inventory-light-blue text-sm">{description}</p>
     </div>
   );
 };

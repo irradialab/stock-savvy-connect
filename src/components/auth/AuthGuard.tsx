@@ -11,26 +11,26 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
   const location = useLocation();
 
   useEffect(() => {
-    // Verificamos si hay un usuario en localStorage
+    // Check if there's a user in localStorage
     const user = localStorage.getItem('user');
     setIsAuthenticated(!!user);
   }, []);
 
-  // Mientras verificamos la autenticación, mostramos un spinner
+  // While verifying authentication, show a spinner
   if (isAuthenticated === null) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-inventory-teal"></div>
+      <div className="flex items-center justify-center h-screen bg-black">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-inventory-teal shadow-[0_0_15px_rgba(51,195,240,0.7)]"></div>
       </div>
     );
   }
 
-  // Si no está autenticado, redirigimos al inicio
+  // If not authenticated, redirect to login
   if (!isAuthenticated) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // Si está autenticado, mostramos el contenido protegido
+  // If authenticated, show protected content
   return <>{children}</>;
 };
 

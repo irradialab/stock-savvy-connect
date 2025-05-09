@@ -100,8 +100,21 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
+			},
+			textShadow: {
+				'glow': '0 0 10px rgba(51, 195, 240, 0.7)'
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }) {
+			const newUtilities = {
+				'.text-glow': {
+					textShadow: '0 0 10px rgba(51, 195, 240, 0.7)'
+				},
+			}
+			addUtilities(newUtilities)
+		}
+	],
 } satisfies Config;
