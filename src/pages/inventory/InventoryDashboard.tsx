@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import DashboardCard from "@/components/inventory/DashboardCard";
 import InventoryStatus from "@/components/inventory/InventoryStatus";
 import AlertsPanel from "@/components/inventory/AlertsPanel";
-import ActivityFeed from "@/components/inventory/ActivityFeed";
 import SupplierConnect from "@/components/inventory/SupplierConnect";
 import InventoryStats from "@/components/inventory/InventoryStats";
 import { Download, Filter, LogOut, Plus, RefreshCcw } from "lucide-react";
@@ -106,7 +105,7 @@ const InventoryDashboard = () => {
       <InventoryStats companyId={selectedCompanyId} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2">
           <DashboardCard title="Inventory" className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
             <div className="flex justify-end items-center mb-4">
               <Button size="sm" variant="ghost" className="text-gray-300 hover:text-white hover:bg-inventory-teal/20">
@@ -114,10 +113,6 @@ const InventoryDashboard = () => {
               </Button>
             </div>
             <InventoryStatus companyId={selectedCompanyId} activeTab="all" />
-          </DashboardCard>
-
-          <DashboardCard title="Recent Activity" className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
-            <ActivityFeed />
           </DashboardCard>
         </div>
 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle, ShoppingCart } from "lucide-react";
@@ -7,13 +6,17 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toStringValue } from "@/lib/utils";
 
-interface InventoryAlert {
+interface Product {
   product_id: string;
   name: string;
   current_stock: number;
-  predicted_days_left: number;
   unit_of_measure: string;
   sku: string;
+  needs_reorder_flag: boolean;
+  last_supplier?: {
+    name: string;
+    price_paid: number;
+  };
 }
 
 interface AlertsPanelProps {
@@ -21,73 +24,92 @@ interface AlertsPanelProps {
 }
 
 const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
-  const [alerts, setAlerts] = useState<InventoryAlert[]>([]);
+  const [lowStockProducts, setLowStockProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!companyId) return;
 
-    const fetchAlerts = async () => {
+    const fetchLowStockProducts = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const { data, error } = await supabase
+        // Obtener productos con stock bajo
+        const { data: products, error: productsError } = await supabase
           .from('products')
-          .select('product_id, name, current_stock, predicted_days_left, unit_of_measure, sku')
+          .select('*')
           .eq('company_id', companyId)
-          .eq('predicted_days_left', 0);
+          .eq('needs_reorder_flag', true);
 
-        if (error) {
-          console.error('Error loading alerts:', error);
+        if (productsError) {
+          console.error('Error fetching low stock products:', productsError);
           return;
         }
 
-        // Convert product_id from number to string to match InventoryAlert interface
-        const formattedData = data?.map(product => ({
-          ...product,
-          product_id: toStringValue(product.product_id)
-        })) as InventoryAlert[];
+        // Obtener información del último proveedor para cada producto
+        const productIds = products?.map(p => p.product_id) || [];
+        const { data: supplierInfo, error: supplierError } = await supabase
+          .from('company_product_supplier_info')
+          .select(`
+            product_id,
+            price_paid,
+            suppliers:supplier_id (
+              name
+            )
+          `)
+          .eq('company_id', companyId)
+          .in('product_id', productIds);
 
-        setAlerts(formattedData || []);
+        if (supplierError) {
+          console.error('Error fetching supplier info:', supplierError);
+          return;
+        }
+
+        // Combinar la información de productos con la de proveedores
+        const formattedData = products?.map(product => {
+          const supplier = supplierInfo?.find(s => s.product_id === product.product_id);
+          return {
+            ...product,
+            product_id: toStringValue(product.product_id),
+            last_supplier: supplier ? {
+              name: supplier.suppliers?.name,
+              price_paid: supplier.price_paid
+            } : undefined
+          };
+        }) || [];
+
+        setLowStockProducts(formattedData);
       } catch (error) {
-        console.error('Error loading alerts:', error);
+        console.error('Error in low stock products fetch:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAlerts();
+    fetchLowStockProducts();
   }, [companyId]);
 
-  const handleAddToCart = (product: InventoryAlert) => {
-    // Store the product in localStorage to pass it to the cart
+  const handleAddToCart = (product: Product) => {
     const cartItem = {
       id: product.product_id,
       name: product.name,
       quantity: 1,
-      unitPrice: 0, // This will be updated from supplier info
+      unitPrice: product.last_supplier?.price_paid || 0,
       sku: product.sku,
-      unit_of_measure: product.unit_of_measure
+      unit_of_measure: product.unit_of_measure,
+      supplier: product.last_supplier?.name
     };
     
-    // Get current cart items or initialize empty array
     const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
-    // Check if product already exists in cart
     const existingItemIndex = currentCart.findIndex((item: any) => item.id === product.product_id);
     
     if (existingItemIndex >= 0) {
-      // Product exists, increase quantity
       currentCart[existingItemIndex].quantity += 1;
     } else {
-      // Add new product to cart
       currentCart.push(cartItem);
     }
     
-    // Save updated cart to localStorage
     localStorage.setItem('cart', JSON.stringify(currentCart));
-    
-    // Navigate to orders page
     navigate('/orders');
   };
 
@@ -97,35 +119,89 @@ const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
 
   return (
     <div className="space-y-4">
-      {alerts.length === 0 ? (
-        <div className="text-center py-4 text-gray-300">No alerts at this time</div>
+      {loading ? (
+        <div className="text-center py-4 text-gray-400">Loading alerts...</div>
       ) : (
-        <div className="max-h-[400px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
-          {alerts.map((alert) => (
-            <Alert 
-              key={alert.product_id} 
-              className="bg-red-900/40 border border-red-500/50 text-white shadow-[0_0_10px_rgba(239,68,68,0.2)]"
-            >
-              <AlertTriangle className="h-4 w-4 text-red-400" />
-              <AlertTitle className="text-sm font-semibold text-red-300">
-                Out of Stock: {alert.name}
-              </AlertTitle>
-              <AlertDescription className="text-xs space-y-2 text-gray-200">
-                <div>SKU: {alert.sku}</div>
-                <div>Current stock: {alert.current_stock} {alert.unit_of_measure}</div>
-                <div className="font-semibold text-red-300">Immediate reorder required!</div>
-                <Button 
-                  size="sm" 
-                  className="mt-2 bg-red-600 hover:bg-red-700 text-white shadow-[0_0_10px_rgba(239,68,68,0.3)]"
-                  onClick={() => handleAddToCart(alert)}
-                >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Order Product
-                </Button>
-              </AlertDescription>
-            </Alert>
-          ))}
-        </div>
+        <>
+          {lowStockProducts.length === 0 ? (
+            <div className="text-center py-4 text-gray-400">No low stock alerts</div>
+          ) : (
+            <div className="space-y-4">
+              {/* Productos con stock 0 */}
+              {lowStockProducts.filter(p => p.current_stock === 0).length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-red-400 mb-2">Out of Stock</h3>
+                  <div className="space-y-2">
+                    {lowStockProducts
+                      .filter(p => p.current_stock === 0)
+                      .map((product) => (
+                        <div
+                          key={product.product_id}
+                          className="p-2 rounded-md bg-red-900/20 border border-red-500/30 flex justify-between items-start"
+                        >
+                          <div>
+                            <div className="font-medium text-red-300">{product.name}</div>
+                            <div className="text-sm text-red-400">SKU: {product.sku}</div>
+                            {product.last_supplier && (
+                              <div className="text-sm text-red-400 mt-1">
+                                Last Supplier: {product.last_supplier.name}
+                              </div>
+                            )}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleAddToCart(product)}
+                            className="text-red-300 hover:text-white hover:bg-red-500/20"
+                          >
+                            <ShoppingCart className="h-4 w-4" />
+                          </Button>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Productos con stock bajo pero mayor a 0 */}
+              {lowStockProducts.filter(p => p.current_stock > 0).length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-amber-400 mb-2">Low Stock Warning</h3>
+                  <div className="space-y-2">
+                    {lowStockProducts
+                      .filter(p => p.current_stock > 0)
+                      .map((product) => (
+                        <div
+                          key={product.product_id}
+                          className="p-2 rounded-md bg-amber-900/20 border border-amber-500/30 flex justify-between items-start"
+                        >
+                          <div>
+                            <div className="font-medium text-amber-300">{product.name}</div>
+                            <div className="text-sm text-amber-400">
+                              Current Stock: {product.current_stock} {product.unit_of_measure}
+                            </div>
+                            <div className="text-xs text-amber-500">SKU: {product.sku}</div>
+                            {product.last_supplier && (
+                              <div className="text-sm text-amber-400 mt-1">
+                                Last Supplier: {product.last_supplier.name}
+                              </div>
+                            )}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleAddToCart(product)}
+                            className="text-amber-300 hover:text-white hover:bg-amber-500/20"
+                          >
+                            <ShoppingCart className="h-4 w-4" />
+                          </Button>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
