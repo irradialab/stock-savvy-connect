@@ -1,54 +1,81 @@
-
+import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface InventoryAlert {
-  id: number;
-  itemName: string;
-  currentStock: number;
-  threshold: number;
-  createdAt: string;
+  product_id: string;
+  name: string;
+  current_stock: number;
+  predicted_days_left: number;
+  unit_of_measure: string;
+  sku: string;
 }
 
-const AlertsPanel = () => {
-  const alerts: InventoryAlert[] = [
-    { 
-      id: 1, 
-      itemName: "Graphics Cards", 
-      currentStock: 58, 
-      threshold: 60, 
-      createdAt: "2023-06-01T09:30:00" 
-    },
-    { 
-      id: 2, 
-      itemName: "SSDs", 
-      currentStock: 87, 
-      threshold: 100, 
-      createdAt: "2023-06-02T14:45:00" 
-    },
-    { 
-      id: 3, 
-      itemName: "Motherboards", 
-      currentStock: 12, 
-      threshold: 30, 
-      createdAt: "2023-06-03T16:20:00" 
-    },
-  ];
+interface AlertsPanelProps {
+  companyId: number | null;
+}
+
+const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
+  const [alerts, setAlerts] = useState<InventoryAlert[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!companyId) return;
+
+    const fetchAlerts = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('products')
+          .select('product_id, name, current_stock, predicted_days_left, unit_of_measure, sku')
+          .eq('company_id', companyId)
+          .eq('predicted_days_left', 0);
+
+        if (error) {
+          console.error('Error al cargar alertas:', error);
+          return;
+        }
+
+        setAlerts(data || []);
+      } catch (error) {
+        console.error('Error al cargar alertas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAlerts();
+  }, [companyId]);
+
+  if (loading) {
+    return <div className="text-center py-4 text-gray-500">Cargando alertas...</div>;
+  }
 
   return (
     <div className="space-y-4">
       {alerts.length === 0 ? (
-        <div className="text-center py-4 text-gray-500">No alerts at this time</div>
+        <div className="text-center py-4 text-gray-500">No hay alertas en este momento</div>
       ) : (
-        alerts.map((alert) => (
-          <Alert key={alert.id} variant="destructive" className="bg-red-50 border-red-200 text-red-800">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle className="text-sm font-semibold">Low Stock Alert: {alert.itemName}</AlertTitle>
-            <AlertDescription className="text-xs">
-              Current stock: {alert.currentStock} (below threshold of {alert.threshold})
-            </AlertDescription>
-          </Alert>
-        ))
+        <div className="max-h-[400px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+          {alerts.map((alert) => (
+            <Alert 
+              key={alert.product_id} 
+              variant="destructive" 
+              className="bg-red-50 border-red-200 text-red-800"
+            >
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle className="text-sm font-semibold">
+                Stock Agotado: {alert.name}
+              </AlertTitle>
+              <AlertDescription className="text-xs space-y-1">
+                <div>SKU: {alert.sku}</div>
+                <div>Stock actual: {alert.current_stock} {alert.unit_of_measure}</div>
+                <div className="font-semibold">¡Se requiere reordenar inmediatamente!</div>
+              </AlertDescription>
+            </Alert>
+          ))}
+        </div>
       )}
     </div>
   );

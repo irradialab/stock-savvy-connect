@@ -97,7 +97,7 @@ const InventoryDashboard = () => {
 
         <div className="space-y-6">
           <DashboardCard title="Alertas de Bajo Stock">
-            <AlertsPanel />
+            <AlertsPanel companyId={selectedCompanyId} />
           </DashboardCard>
 
           <DashboardCard title="Conectar con Proveedores">
