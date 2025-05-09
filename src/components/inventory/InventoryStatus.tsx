@@ -227,7 +227,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                       ? 'bg-red-100 text-red-800'
                       : 'bg-green-100 text-green-800'
                   }`}>
-                    {product.needs_reorder_flag ? 'Low Stock' : 'Normal'}
+                    {product.needs_reorder_flag ? 'Low' : 'Normal'}
                   </span>
                 </TableCell>
               </TableRow>
