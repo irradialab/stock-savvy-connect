@@ -308,18 +308,21 @@ export type Database = {
           company_id: number
           created_at: string | null
           email: string | null
+          password: string | null
           user_id: number
         }
         Insert: {
           company_id: number
           created_at?: string | null
           email?: string | null
+          password?: string | null
           user_id: number
         }
         Update: {
           company_id?: number
           created_at?: string | null
           email?: string | null
+          password?: string | null
           user_id?: number
         }
         Relationships: [
