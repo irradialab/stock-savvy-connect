@@ -74,7 +74,7 @@ const InventoryDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <DashboardCard title="Inventory Status">
+          <DashboardCard title="Inventory">
             <div className="flex justify-between items-center mb-4">
               <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
                 <TabsList>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowUpIcon, ArrowDownIcon } from "lucide-react";
@@ -24,7 +23,7 @@ const InventoryStats = ({ companyId }: InventoryStatsProps) => {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        // Obtener total de productos
+        // Get total products
         const { data: products, error: productsError } = await supabase
           .from('products')
           .select('product_id, needs_reorder_flag')
@@ -35,10 +34,10 @@ const InventoryStats = ({ companyId }: InventoryStatsProps) => {
           return;
         }
 
-        // Calcular productos con bajo stock
+        // Calculate low stock items
         const lowStockItems = products.filter(product => product.needs_reorder_flag).length;
 
-        // Para movimientos entrantes, podríamos buscar en stock_movements
+        // For incoming movements, we could search in stock_movements
         const { data: movements, error: movementsError } = await supabase
           .from('stock_movements')
           .select('movement_id')
@@ -50,12 +49,12 @@ const InventoryStats = ({ companyId }: InventoryStatsProps) => {
           return;
         }
 
-        // Calcular estadísticas
+        // Calculate statistics
         setStats({
           totalItems: products.length,
           lowStockItems: lowStockItems,
           incomingOrders: movements?.length || 0,
-          turnoverRate: 32 // Valor ficticio por ahora, podría calcularse con datos reales
+          turnoverRate: 32 // Fictitious value for now, could be calculated with real data
         });
       } catch (error) {
         console.error('Error fetching inventory stats:', error);
@@ -81,28 +80,28 @@ const InventoryStats = ({ companyId }: InventoryStatsProps) => {
 
   const statsData = [
     {
-      title: "Total Productos",
+      title: "Total Products",
       value: stats.totalItems.toString(),
       icon: Boxes,
       change: "+5.2%",
       positive: true,
     },
     {
-      title: "Bajo Stock",
+      title: "Low Stock",
       value: stats.lowStockItems.toString(),
       icon: AlertTriangle,
       change: "-8%",
       positive: true,
     },
     {
-      title: "Pedidos Entrantes",
+      title: "Incoming Orders",
       value: stats.incomingOrders.toString(),
       icon: Truck,
       change: "+12%",
       positive: true,
     },
     {
-      title: "Rotación Mensual",
+      title: "Monthly Turnover",
       value: `${stats.turnoverRate}%`,
       icon: TrendingUp,
       change: "+3.1%",
@@ -131,7 +130,7 @@ const InventoryStats = ({ companyId }: InventoryStatsProps) => {
                 <ArrowDownIcon className="h-4 w-4 text-red-500 mr-1" />
               )}
               <span className={stat.positive ? "text-green-600" : "text-red-600"}>
-                {stat.change} desde el mes pasado
+                {stat.change} since last month
               </span>
             </div>
           </CardContent>
