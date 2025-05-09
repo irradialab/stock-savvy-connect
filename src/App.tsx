@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import InventoryDashboard from "./pages/inventory/InventoryDashboard";
 import Orders from "./pages/orders/Orders";
+import Suppliers from "./pages/suppliers/Suppliers";
 import Layout from "./components/Layout";
 import AuthGuard from "./components/auth/AuthGuard";
 
@@ -32,6 +33,13 @@ const App = () => (
             <AuthGuard>
               <Layout>
                 <Orders />
+              </Layout>
+            </AuthGuard>
+          } />
+          <Route path="/suppliers" element={
+            <AuthGuard>
+              <Layout>
+                <Suppliers />
               </Layout>
             </AuthGuard>
           } />

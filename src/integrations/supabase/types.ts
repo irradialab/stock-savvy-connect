@@ -9,48 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      allied_supplier_product_details: {
-        Row: {
-          current_price: number | null
-          detail_id: string
-          has_stock: string | null
-          last_checked_at: string | null
-          product_id: string | null
-          relationship_id: string | null
-        }
-        Insert: {
-          current_price?: number | null
-          detail_id: string
-          has_stock?: string | null
-          last_checked_at?: string | null
-          product_id?: string | null
-          relationship_id?: string | null
-        }
-        Update: {
-          current_price?: number | null
-          detail_id?: string
-          has_stock?: string | null
-          last_checked_at?: string | null
-          product_id?: string | null
-          relationship_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "allied_supplier_product_details_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["product_id"]
-          },
-          {
-            foreignKeyName: "allied_supplier_product_details_relationship_id_fkey"
-            columns: ["relationship_id"]
-            isOneToOne: false
-            referencedRelation: "company_supplier_relationships"
-            referencedColumns: ["relationship_id"]
-          },
-        ]
-      }
       companies: {
         Row: {
           company_id: number
@@ -75,30 +33,39 @@ export type Database = {
       company_product_supplier_info: {
         Row: {
           company_id: number | null
-          info_id: string
+          discount: number | null
+          id_transaction: number
           is_last_used: boolean | null
           last_purchase_date: string | null
           price_paid: number | null
-          product_id: string | null
-          supplier_id: string | null
+          product_id: number | null
+          quantity: number | null
+          supplier_id: number | null
+          unit_price: number | null
         }
         Insert: {
           company_id?: number | null
-          info_id: string
+          discount?: number | null
+          id_transaction: number
           is_last_used?: boolean | null
           last_purchase_date?: string | null
           price_paid?: number | null
-          product_id?: string | null
-          supplier_id?: string | null
+          product_id?: number | null
+          quantity?: number | null
+          supplier_id?: number | null
+          unit_price?: number | null
         }
         Update: {
           company_id?: number | null
-          info_id?: string
+          discount?: number | null
+          id_transaction?: number
           is_last_used?: boolean | null
           last_purchase_date?: string | null
           price_paid?: number | null
-          product_id?: string | null
-          supplier_id?: string | null
+          product_id?: number | null
+          quantity?: number | null
+          supplier_id?: number | null
+          unit_price?: number | null
         }
         Relationships: [
           {
@@ -157,13 +124,6 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["company_id"]
           },
-          {
-            foreignKeyName: "company_supplier_relationships_supplier_id_fkey"
-            columns: ["supplier_id"]
-            isOneToOne: false
-            referencedRelation: "suppliers"
-            referencedColumns: ["supplier_id"]
-          },
         ]
       }
       products: {
@@ -175,7 +135,7 @@ export type Database = {
           name: string | null
           needs_reorder_flag: boolean | null
           predicted_days_left: number | null
-          product_id: string
+          product_id: number
           reorder_threshold_days: number | null
           sku: string | null
           unit_of_measure: string | null
@@ -189,7 +149,7 @@ export type Database = {
           name?: string | null
           needs_reorder_flag?: boolean | null
           predicted_days_left?: number | null
-          product_id: string
+          product_id: number
           reorder_threshold_days?: number | null
           sku?: string | null
           unit_of_measure?: string | null
@@ -203,7 +163,7 @@ export type Database = {
           name?: string | null
           needs_reorder_flag?: boolean | null
           predicted_days_left?: number | null
-          product_id?: string
+          product_id?: number
           reorder_threshold_days?: number | null
           sku?: string | null
           unit_of_measure?: string | null
@@ -250,32 +210,17 @@ export type Database = {
           update_type?: string | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "stock_movements_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["product_id"]
-          },
-          {
-            foreignKeyName: "stock_movements_supplier_id_fkey"
-            columns: ["supplier_id"]
-            isOneToOne: false
-            referencedRelation: "suppliers"
-            referencedColumns: ["supplier_id"]
-          },
-        ]
+        Relationships: []
       }
       suppliers: {
         Row: {
           address: string | null
           created_at: string | null
           email: string | null
-          name: string | null
+          name: string
           phone: string | null
           source: string | null
-          supplier_id: string
+          supplier_id: number
           type: string | null
           website: string | null
         }
@@ -283,10 +228,10 @@ export type Database = {
           address?: string | null
           created_at?: string | null
           email?: string | null
-          name?: string | null
+          name: string
           phone?: string | null
           source?: string | null
-          supplier_id: string
+          supplier_id: number
           type?: string | null
           website?: string | null
         }
@@ -294,10 +239,10 @@ export type Database = {
           address?: string | null
           created_at?: string | null
           email?: string | null
-          name?: string | null
+          name?: string
           phone?: string | null
           source?: string | null
-          supplier_id?: string
+          supplier_id?: number
           type?: string | null
           website?: string | null
         }

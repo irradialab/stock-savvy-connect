@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
-import { Star, StarIcon } from "lucide-react";
+import { Star, StarIcon, ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Supplier {
   id: number;
@@ -11,6 +12,7 @@ interface Supplier {
 }
 
 const SupplierConnect = () => {
+  const navigate = useNavigate();
   const suppliers: Supplier[] = [
     {
       id: 1,
@@ -42,11 +44,24 @@ const SupplierConnect = () => {
     },
   ];
 
+  const goToSuppliers = () => {
+    navigate('/suppliers');
+  };
+
   return (
     <div className="space-y-3">
       {suppliers.map((supplier) => (
         <SupplierCard key={supplier.id} supplier={supplier} />
       ))}
+      <div className="text-center mt-4">
+        <Button 
+          className="bg-inventory-teal hover:bg-inventory-teal/90 text-white shadow-[0_0_10px_rgba(51,195,240,0.2)]"
+          onClick={goToSuppliers}
+        >
+          <ShoppingCart className="h-4 w-4 mr-2" />
+          Visit Supplier Marketplace
+        </Button>
+      </div>
     </div>
   );
 };
