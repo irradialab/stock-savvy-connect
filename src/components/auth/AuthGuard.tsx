@@ -33,8 +33,8 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
   if (isCheckingAuth || isAuthenticated === null) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-black">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-t-2 border-inventory-teal shadow-[0_0_20px_rgba(51,195,240,0.8)]"></div>
-        <p className="mt-4 text-inventory-teal text-glow animate-pulse">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-t-2 border-inventory-teal shadow-[0_0_25px_rgba(51,195,240,1)]"></div>
+        <p className="mt-6 text-inventory-teal text-lg font-medium text-glow animate-pulse">
           Verifying authentication status...
         </p>
       </div>

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,57 +41,60 @@ const Orders = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-inventory-blue">Orders</h1>
-          <p className="text-sm text-inventory-gray mt-1">
+          <h1 className="text-2xl font-bold text-white text-glow-strong">Orders</h1>
+          <p className="text-sm text-gray-300 mt-1">
             Manage your purchase orders and shopping cart
           </p>
         </div>
       </div>
 
       <Tabs defaultValue="cart" className="w-full" onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="cart">
+        <TabsList className="bg-black/60 border border-inventory-teal/30">
+          <TabsTrigger value="cart" className="text-gray-300 data-[state=active]:text-white data-[state=active]:bg-inventory-teal">
             <ShoppingCart className="h-4 w-4 mr-2" />
             Shopping Cart
           </TabsTrigger>
-          <TabsTrigger value="orders">Purchase Orders</TabsTrigger>
+          <TabsTrigger value="orders" className="text-gray-300 data-[state=active]:text-white data-[state=active]:bg-inventory-teal">
+            Purchase Orders
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="cart" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Shopping Cart</CardTitle>
+          <Card className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
+            <CardHeader className="border-b border-inventory-teal/20">
+              <CardTitle className="text-white text-glow-subtle">Shopping Cart</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               {cartItems.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-gray-400">
                   Your cart is empty. Add products from the inventory to start ordering.
                 </div>
               ) : (
                 <>
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Supplier</TableHead>
-                        <TableHead>Unit Price</TableHead>
-                        <TableHead>Quantity</TableHead>
-                        <TableHead>Total</TableHead>
-                        <TableHead className="w-[100px]">Actions</TableHead>
+                      <TableRow className="border-inventory-teal/30">
+                        <TableHead className="text-gray-300">Product</TableHead>
+                        <TableHead className="text-gray-300">Supplier</TableHead>
+                        <TableHead className="text-gray-300">Unit Price</TableHead>
+                        <TableHead className="text-gray-300">Quantity</TableHead>
+                        <TableHead className="text-gray-300">Total</TableHead>
+                        <TableHead className="w-[100px] text-gray-300">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {cartItems.map((item) => (
-                        <TableRow key={item.id}>
-                          <TableCell>{item.name}</TableCell>
-                          <TableCell>{item.supplier}</TableCell>
-                          <TableCell>${item.unitPrice.toFixed(2)}</TableCell>
+                        <TableRow key={item.id} className="border-inventory-teal/20">
+                          <TableCell className="text-gray-300">{item.name}</TableCell>
+                          <TableCell className="text-gray-300">{item.supplier}</TableCell>
+                          <TableCell className="text-gray-300">${item.unitPrice.toFixed(2)}</TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-2">
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleQuantityChange(item.id, -1)}
+                                className="border-inventory-teal/40 bg-black/60 text-gray-300 hover:bg-inventory-teal/20"
                               >
                                 <Minus className="h-4 w-4" />
                               </Button>
@@ -98,26 +102,28 @@ const Orders = () => {
                                 type="number"
                                 value={item.quantity}
                                 onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value) - item.quantity)}
-                                className="w-20 text-center"
+                                className="w-20 text-center bg-black/60 border-inventory-teal/40 text-white"
                                 min="0"
                               />
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleQuantityChange(item.id, 1)}
+                                className="border-inventory-teal/40 bg-black/60 text-gray-300 hover:bg-inventory-teal/20"
                               >
                                 <Plus className="h-4 w-4" />
                               </Button>
                             </div>
                           </TableCell>
-                          <TableCell>${(item.quantity * item.unitPrice).toFixed(2)}</TableCell>
+                          <TableCell className="text-white">${(item.quantity * item.unitPrice).toFixed(2)}</TableCell>
                           <TableCell>
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => removeFromCart(item.id)}
+                              className="text-red-400 hover:text-red-300 hover:bg-red-900/30"
                             >
-                              <Trash2 className="h-4 w-4 text-red-500" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -126,12 +132,12 @@ const Orders = () => {
                   </Table>
 
                   <div className="flex justify-between items-center mt-6">
-                    <div className="text-lg font-semibold">
+                    <div className="text-lg font-semibold text-white">
                       Total: ${calculateTotal().toFixed(2)}
                     </div>
                     <div className="space-x-2">
-                      <Button variant="outline">Save for Later</Button>
-                      <Button>Place Order</Button>
+                      <Button variant="outline" className="border-inventory-teal/40 bg-black/60 text-gray-300 hover:bg-inventory-teal/20">Save for Later</Button>
+                      <Button className="bg-inventory-teal hover:bg-inventory-teal/90 text-white shadow-[0_0_10px_rgba(51,195,240,0.4)]">Place Order</Button>
                     </div>
                   </div>
                 </>
@@ -141,12 +147,12 @@ const Orders = () => {
         </TabsContent>
 
         <TabsContent value="orders">
-          <Card>
-            <CardHeader>
-              <CardTitle>Purchase Orders</CardTitle>
+          <Card className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
+            <CardHeader className="border-b border-inventory-teal/20">
+              <CardTitle className="text-white text-glow-subtle">Purchase Orders</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-gray-500">
+            <CardContent className="pt-6">
+              <div className="text-center py-8 text-gray-400">
                 No purchase orders found. Create a new order from your shopping cart.
               </div>
             </CardContent>
@@ -157,4 +163,4 @@ const Orders = () => {
   );
 };
 
-export default Orders; 
+export default Orders;

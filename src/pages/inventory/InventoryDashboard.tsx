@@ -62,22 +62,22 @@ const InventoryDashboard = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-inventory-teal">Inventory Dashboard</h1>
-          <p className="text-sm text-inventory-light-blue mt-1">
+          <h1 className="text-2xl font-bold text-white text-glow-strong">Inventory Dashboard</h1>
+          <p className="text-sm text-gray-300 mt-1">
             Monitor and manage your company's inventory in real-time
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <CompanySelector onCompanyChange={handleCompanyChange} />
-          <Button size="sm" variant="outline" className="h-9 border-inventory-teal/30 bg-black/40 text-inventory-light-blue hover:bg-inventory-teal/20">
+          <Button size="sm" variant="outline" className="h-9 border-inventory-teal/40 bg-black/60 text-gray-300 hover:bg-inventory-teal/20 hover:text-white">
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
-          <Button size="sm" variant="outline" className="h-9 border-inventory-teal/30 bg-black/40 text-inventory-light-blue hover:bg-inventory-teal/20">
+          <Button size="sm" variant="outline" className="h-9 border-inventory-teal/40 bg-black/60 text-gray-300 hover:bg-inventory-teal/20 hover:text-white">
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button size="sm" className="h-9 bg-inventory-teal hover:bg-inventory-teal/90 shadow-[0_0_10px_rgba(51,195,240,0.4)]">
+          <Button size="sm" className="h-9 bg-inventory-teal hover:bg-inventory-teal/90 text-white shadow-[0_0_10px_rgba(51,195,240,0.4)]">
             <Plus className="h-4 w-4 mr-2" />
             Add Product
           </Button>
@@ -92,36 +92,36 @@ const InventoryDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <DashboardCard title="Inventory">
+          <DashboardCard title="Inventory" className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
             <div className="flex justify-between items-center mb-4">
               <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
-                <TabsList className="bg-black/50 border border-inventory-teal/20">
+                <TabsList className="bg-black/60 border border-inventory-teal/30">
                   <TabsTrigger 
                     value="all"
-                    className="data-[state=active]:bg-inventory-teal data-[state=active]:text-white"
+                    className="data-[state=active]:bg-inventory-teal data-[state=active]:text-white text-gray-300"
                   >
                     All Products
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
-              <Button size="sm" variant="ghost" className="ml-2 text-inventory-light-blue hover:bg-inventory-teal/20">
+              <Button size="sm" variant="ghost" className="ml-2 text-gray-300 hover:text-white hover:bg-inventory-teal/20">
                 <RefreshCcw className="h-4 w-4" />
               </Button>
             </div>
             <InventoryStatus companyId={selectedCompanyId} activeTab={activeTab} />
           </DashboardCard>
 
-          <DashboardCard title="Recent Activity">
+          <DashboardCard title="Recent Activity" className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
             <ActivityFeed />
           </DashboardCard>
         </div>
 
         <div className="space-y-6">
-          <DashboardCard title="Low Stock Alerts">
+          <DashboardCard title="Low Stock Alerts" className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
             <AlertsPanel companyId={selectedCompanyId} />
           </DashboardCard>
 
-          <DashboardCard title="Connect with Suppliers">
+          <DashboardCard title="Connect with Suppliers" className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
             <SupplierConnect />
           </DashboardCard>
         </div>

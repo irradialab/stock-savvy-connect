@@ -100,16 +100,16 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="w-full max-w-md p-8 space-y-8 bg-black/60 backdrop-blur-md rounded-lg border border-inventory-teal/20 shadow-[0_0_20px_rgba(51,195,240,0.2)]">
+    <div className="w-full max-w-md p-8 space-y-8 bg-black/80 backdrop-blur-md rounded-lg border border-inventory-teal/30 shadow-[0_0_20px_rgba(51,195,240,0.3)]">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-inventory-teal text-glow">Access Portal</h2>
-        <p className="mt-2 text-sm text-inventory-light-blue">
+        <h2 className="text-2xl font-bold text-white text-glow-strong">Access Portal</h2>
+        <p className="mt-2 text-sm text-gray-300">
           Enter your credentials to access the system
         </p>
       </div>
 
       {error && (
-        <Alert variant="destructive" className="bg-red-900/50 border-red-800 animate-pulse">
+        <Alert variant="destructive" className="bg-red-900/80 border-red-800 text-white animate-pulse">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -117,7 +117,7 @@ const LoginForm = () => {
       <form onSubmit={handleLogin} className="mt-8 space-y-6">
         <div className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-inventory-light-blue">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
               Email Address
             </label>
             <Input
@@ -127,11 +127,11 @@ const LoginForm = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 bg-black/50 border-inventory-teal/30 focus-visible:ring-inventory-teal"
+              className="mt-1 bg-black/60 border-inventory-teal/40 focus-visible:ring-inventory-teal text-white placeholder:text-gray-500"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-inventory-light-blue">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
               Password
             </label>
             <div className="relative mt-1">
@@ -142,17 +142,17 @@ const LoginForm = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pr-10 bg-black/50 border-inventory-teal/30 focus-visible:ring-inventory-teal"
+                className="pr-10 bg-black/60 border-inventory-teal/40 focus-visible:ring-inventory-teal text-white placeholder:text-gray-500"
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 flex items-center pr-3"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-inventory-light-blue" />
+                  <EyeOff className="h-4 w-4" />
                 ) : (
-                  <Eye className="h-4 w-4 text-inventory-light-blue" />
+                  <Eye className="h-4 w-4" />
                 )}
               </button>
             </div>
@@ -162,7 +162,7 @@ const LoginForm = () => {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full py-2 px-4 bg-inventory-teal hover:bg-inventory-teal/90 shadow-[0_0_10px_rgba(51,195,240,0.4)] transition-all duration-300"
+          className="w-full py-2 px-4 bg-inventory-teal hover:bg-inventory-teal/90 text-white font-medium shadow-[0_0_10px_rgba(51,195,240,0.5)] transition-all duration-300"
         >
           {loading ? (
             <div className="flex items-center justify-center">

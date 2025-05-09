@@ -29,9 +29,9 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 240 5% 25%; /* Increased contrast for borders */
+    --input: 240 5% 25%; /* Increased contrast for input elements */
+    --ring: 192 79% 45%; /* Teal ring color for focus states */
 
     --radius: 0.5rem;
 
@@ -41,7 +41,7 @@
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-border: 240 5% 25%; /* Increased contrast */
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
@@ -53,8 +53,34 @@
 
   body {
     @apply bg-black text-foreground;
-    background-image: radial-gradient(circle at 50% 50%, rgba(51, 195, 240, 0.15) 0%, rgba(26, 31, 44, 0.9) 100%);
+    background-image: radial-gradient(circle at 50% 50%, rgba(51, 195, 240, 0.1) 0%, rgba(26, 31, 44, 0.95) 100%);
     background-attachment: fixed;
+  }
+}
+
+@layer components {
+  /* Enhanced futuristic button styling */
+  .btn-futuristic {
+    @apply relative overflow-hidden bg-gradient-to-r from-inventory-teal/80 to-inventory-teal border border-inventory-teal/30 shadow-[0_0_10px_rgba(51,195,240,0.5)];
+  }
+  
+  .btn-futuristic:hover {
+    @apply shadow-[0_0_15px_rgba(51,195,240,0.7)];
+  }
+  
+  /* Card with better contrast */
+  .card-futuristic {
+    @apply bg-black/70 backdrop-blur-md border border-inventory-teal/30 shadow-md;
+  }
+  
+  /* Improved input styling */
+  .input-futuristic {
+    @apply bg-black/50 border-inventory-teal/40 text-white placeholder:text-gray-400;
+  }
+  
+  /* High contrast text */
+  .high-contrast-text {
+    @apply text-white font-medium;
   }
 }
 
@@ -80,5 +106,20 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: #29a6cc;
+  }
+  
+  /* Enhanced text glow effect */
+  .text-glow {
+    text-shadow: 0 0 10px rgba(51, 195, 240, 0.7);
+  }
+  
+  /* Stronger text glow for headings */
+  .text-glow-strong {
+    text-shadow: 0 0 15px rgba(51, 195, 240, 0.9);
+  }
+  
+  /* Subtle text glow for secondary text */
+  .text-glow-subtle {
+    text-shadow: 0 0 5px rgba(51, 195, 240, 0.4);
   }
 }

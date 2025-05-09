@@ -10,9 +10,9 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-inventory-light-gray">
+      <div className="min-h-screen flex w-full bg-black">
         <Sidebar />
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-6 overflow-y-auto custom-scrollbar">
           {children}
         </main>
       </div>
