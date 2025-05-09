@@ -8,25 +8,42 @@ interface AuthGuardProps {
 
 const AuthGuard = ({ children }: AuthGuardProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
-    // Check if there's a user in localStorage
-    const user = localStorage.getItem('user');
-    setIsAuthenticated(!!user);
+    // Add a small delay to ensure localStorage is properly checked
+    const checkAuth = async () => {
+      try {
+        // Check if there's a user in localStorage
+        const user = localStorage.getItem('user');
+        setIsAuthenticated(!!user);
+      } catch (error) {
+        console.error("Authentication check error:", error);
+        setIsAuthenticated(false);
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+    
+    checkAuth();
   }, []);
 
   // While verifying authentication, show a spinner
-  if (isAuthenticated === null) {
+  if (isCheckingAuth || isAuthenticated === null) {
     return (
-      <div className="flex items-center justify-center h-screen bg-black">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-inventory-teal shadow-[0_0_15px_rgba(51,195,240,0.7)]"></div>
+      <div className="flex flex-col items-center justify-center h-screen bg-black">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-t-2 border-inventory-teal shadow-[0_0_20px_rgba(51,195,240,0.8)]"></div>
+        <p className="mt-4 text-inventory-teal text-glow animate-pulse">
+          Verifying authentication status...
+        </p>
       </div>
     );
   }
 
   // If not authenticated, redirect to login
   if (!isAuthenticated) {
+    console.log("User not authenticated, redirecting to login page");
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
