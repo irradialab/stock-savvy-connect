@@ -243,7 +243,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                   onClick={() => handleSort('predicted_days_left')}
                   className="flex items-center gap-1"
                 >
-                  Days Left
+                  Predicted Left Days
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
