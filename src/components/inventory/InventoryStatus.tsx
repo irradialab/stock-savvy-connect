@@ -279,8 +279,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                     onClick={() => handleAddToCart(product)}
                     className="text-inventory-teal hover:bg-inventory-teal/20 hover:text-white"
                   >
-                    <ShoppingCart className="h-4 w-4 mr-1" />
-                    Order
+                    <ShoppingCart className="h-4 w-4" />
                   </Button>
                 </TableCell>
               </TableRow>
