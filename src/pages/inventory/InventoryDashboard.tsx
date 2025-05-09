@@ -1,52 +1,44 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardCard from "@/components/inventory/DashboardCard";
 import InventoryStatus from "@/components/inventory/InventoryStatus";
 import AlertsPanel from "@/components/inventory/AlertsPanel";
 import ActivityFeed from "@/components/inventory/ActivityFeed";
 import SupplierConnect from "@/components/inventory/SupplierConnect";
 import InventoryStats from "@/components/inventory/InventoryStats";
-import CompanySelector from "@/components/inventory/CompanySelector";
 import { Download, Filter, LogOut, Plus, RefreshCcw } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const InventoryDashboard = () => {
-  const [activeTab, setActiveTab] = useState("all");
   const [selectedCompanyId, setSelectedCompanyId] = useState<number | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchInitialCompany = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('companies')
-          .select('company_id')
-          .limit(1)
-          .single();
+    const user = localStorage.getItem('user');
+    if (!user) {
+      navigate('/');
+      return;
+    }
 
-        if (error) {
-          console.error('Error loading initial company:', error);
-          return;
-        }
-
-        if (data) {
-          setSelectedCompanyId(data.company_id);
-        }
-      } catch (error) {
-        console.error('Error loading initial company:', error);
+    try {
+      const userData = JSON.parse(user);
+      if (userData.company_id) {
+        setSelectedCompanyId(userData.company_id);
+      } else {
+        toast({
+          title: "Error",
+          description: "No company associated with your account",
+          variant: "destructive"
+        });
+        navigate('/');
       }
-    };
-
-    fetchInitialCompany();
-  }, []);
-
-  const handleCompanyChange = (companyId: number) => {
-    setSelectedCompanyId(companyId);
-  };
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      navigate('/');
+    }
+  }, [navigate, toast]);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -67,7 +59,6 @@ const InventoryDashboard = () => {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <CompanySelector onCompanyChange={handleCompanyChange} />
           <Button size="sm" variant="outline" className="h-9 border-inventory-teal/40 bg-black/60 text-gray-300 hover:bg-inventory-teal/20 hover:text-white">
             <Filter className="h-4 w-4 mr-2" />
             Filter
@@ -97,7 +88,7 @@ const InventoryDashboard = () => {
                 <RefreshCcw className="h-4 w-4" />
               </Button>
             </div>
-            <InventoryStatus companyId={selectedCompanyId} activeTab={activeTab} />
+            <InventoryStatus companyId={selectedCompanyId} activeTab="all" />
           </DashboardCard>
 
           <DashboardCard title="Recent Activity" className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
