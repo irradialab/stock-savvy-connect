@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -93,18 +92,8 @@ const InventoryDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <DashboardCard title="Inventory" className="border-inventory-teal/30 bg-black/70 backdrop-blur-md">
-            <div className="flex justify-between items-center mb-4">
-              <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
-                <TabsList className="bg-black/60 border border-inventory-teal/30">
-                  <TabsTrigger 
-                    value="all"
-                    className="data-[state=active]:bg-inventory-teal data-[state=active]:text-white text-gray-300"
-                  >
-                    All Products
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-              <Button size="sm" variant="ghost" className="ml-2 text-gray-300 hover:text-white hover:bg-inventory-teal/20">
+            <div className="flex justify-end items-center mb-4">
+              <Button size="sm" variant="ghost" className="text-gray-300 hover:text-white hover:bg-inventory-teal/20">
                 <RefreshCcw className="h-4 w-4" />
               </Button>
             </div>
