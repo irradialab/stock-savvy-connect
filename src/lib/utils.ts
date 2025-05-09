@@ -20,3 +20,13 @@ export function formatCurrency(amount: number): string {
     currency: 'USD',
   }).format(amount);
 }
+
+// Safe conversion from number to string
+export function toStringValue(value: number | string): string {
+  return String(value);
+}
+
+// Safe conversion from string to number
+export function toNumberValue(value: string | number): number {
+  return typeof value === 'string' ? parseInt(value, 10) : value;
+}

@@ -13,7 +13,7 @@ const Suppliers = () => {
   const [loading, setLoading] = useState(true);
   const [suppliers, setSuppliers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");  // Changed from empty string to "all"
   const [sortBy, setSortBy] = useState("name");
   const [companyId, setCompanyId] = useState<number | null>(null);
 
@@ -169,7 +169,7 @@ const Suppliers = () => {
       supplier.otherProducts.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
       
     const matchesCategory = 
-      categoryFilter === "" || 
+      categoryFilter === "all" || // Changed from empty string to "all"
       supplier.type === categoryFilter;
       
     return matchesSearch && matchesCategory;
@@ -222,7 +222,7 @@ const Suppliers = () => {
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Categories</SelectItem>
+                    <SelectItem value="all">All Categories</SelectItem> {/* Changed from empty string to "all" */}
                     {supplierCategories.map(category => (
                       <SelectItem key={category} value={category}>{category}</SelectItem>
                     ))}

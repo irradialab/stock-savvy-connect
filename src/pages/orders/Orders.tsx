@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { toStringValue, toNumberValue } from "@/lib/utils";
 
 interface CartItem {
   id: string;
@@ -94,13 +95,13 @@ const Orders = () => {
         const suppliersByProduct: Record<string, Supplier[]> = {};
         
         data.forEach(info => {
-          const productId = info.product_id as string;
+          const productId = toStringValue(info.product_id);
           if (!suppliersByProduct[productId]) {
             suppliersByProduct[productId] = [];
           }
           
           suppliersByProduct[productId].push({
-            supplier_id: info.supplier_id as string,
+            supplier_id: toStringValue(info.supplier_id),
             name: info.suppliers?.name as string,
             price_paid: info.price_paid as number
           });

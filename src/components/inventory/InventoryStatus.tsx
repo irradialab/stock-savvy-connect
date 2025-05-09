@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { toStringValue } from "@/lib/utils";
 
 interface Product {
   product_id: string;
@@ -66,7 +67,13 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
           return;
         }
 
-        setProducts(data || []);
+        // Convert product_id from number to string to match the Product interface
+        const formattedData = data?.map(product => ({
+          ...product,
+          product_id: toStringValue(product.product_id)
+        })) || [];
+
+        setProducts(formattedData);
       } catch (error) {
         console.error('Error al cargar productos:', error);
       } finally {
@@ -89,7 +96,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
   const handleAddToCart = (product: Product) => {
     // Store the product in localStorage to pass it to the cart
     const cartItem = {
-      id: product.product_id,
+      id: product.product_id, // Now this is already a string
       name: product.name,
       quantity: 1,
       unitPrice: 0, // This will be updated from supplier info

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
@@ -44,7 +45,7 @@ const CompanySelector = ({ onCompanyChange }: CompanySelectorProps) => {
     };
 
     fetchCompanies();
-  }, []);
+  }, [onCompanyChange]); // Added onCompanyChange to dependency array
 
   const handleCompanyChange = (value: string) => {
     setSelectedCompany(value);
