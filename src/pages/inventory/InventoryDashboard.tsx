@@ -25,7 +25,7 @@ const InventoryDashboard = () => {
           .single();
 
         if (error) {
-          console.error('Error al cargar la compañía inicial:', error);
+          console.error('Error loading initial company:', error);
           return;
         }
 
@@ -33,7 +33,7 @@ const InventoryDashboard = () => {
           setSelectedCompanyId(data.company_id);
         }
       } catch (error) {
-        console.error('Error al cargar la compañía inicial:', error);
+        console.error('Error loading initial company:', error);
       }
     };
 
@@ -48,24 +48,24 @@ const InventoryDashboard = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-inventory-blue">Panel de Inventario</h1>
+          <h1 className="text-2xl font-bold text-inventory-blue">Inventory Dashboard</h1>
           <p className="text-sm text-inventory-gray mt-1">
-            Monitorea y gestiona el inventario de tu empresa en tiempo real
+            Monitor and manage your company's inventory in real-time
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <CompanySelector onCompanyChange={handleCompanyChange} />
           <Button size="sm" variant="outline" className="h-9">
             <Filter className="h-4 w-4 mr-2" />
-            Filtrar
+            Filter
           </Button>
           <Button size="sm" variant="outline" className="h-9">
             <Download className="h-4 w-4 mr-2" />
-            Exportar
+            Export
           </Button>
           <Button size="sm" className="h-9 bg-inventory-teal hover:bg-inventory-teal/90">
             <Plus className="h-4 w-4 mr-2" />
-            Añadir Producto
+            Add Product
           </Button>
         </div>
       </div>
@@ -74,13 +74,11 @@ const InventoryDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <DashboardCard title="Estado del Inventario">
+          <DashboardCard title="Inventory Status">
             <div className="flex justify-between items-center mb-4">
               <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
                 <TabsList>
-                  <TabsTrigger value="all">Todos los Productos</TabsTrigger>
-                  
-                  
+                  <TabsTrigger value="all">All Products</TabsTrigger>
                 </TabsList>
               </Tabs>
               <Button size="sm" variant="ghost" className="ml-2">
@@ -90,17 +88,17 @@ const InventoryDashboard = () => {
             <InventoryStatus companyId={selectedCompanyId} activeTab={activeTab} />
           </DashboardCard>
 
-          <DashboardCard title="Actividad Reciente">
+          <DashboardCard title="Recent Activity">
             <ActivityFeed />
           </DashboardCard>
         </div>
 
         <div className="space-y-6">
-          <DashboardCard title="Alertas de Bajo Stock">
+          <DashboardCard title="Low Stock Alerts">
             <AlertsPanel companyId={selectedCompanyId} />
           </DashboardCard>
 
-          <DashboardCard title="Conectar con Proveedores">
+          <DashboardCard title="Connect with Suppliers">
             <SupplierConnect />
           </DashboardCard>
         </div>

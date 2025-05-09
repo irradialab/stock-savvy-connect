@@ -34,13 +34,13 @@ const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
           .eq('predicted_days_left', 0);
 
         if (error) {
-          console.error('Error al cargar alertas:', error);
+          console.error('Error loading alerts:', error);
           return;
         }
 
         setAlerts(data || []);
       } catch (error) {
-        console.error('Error al cargar alertas:', error);
+        console.error('Error loading alerts:', error);
       } finally {
         setLoading(false);
       }
@@ -50,13 +50,13 @@ const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
   }, [companyId]);
 
   if (loading) {
-    return <div className="text-center py-4 text-gray-500">Cargando alertas...</div>;
+    return <div className="text-center py-4 text-gray-500">Loading alerts...</div>;
   }
 
   return (
     <div className="space-y-4">
       {alerts.length === 0 ? (
-        <div className="text-center py-4 text-gray-500">No hay alertas en este momento</div>
+        <div className="text-center py-4 text-gray-500">No alerts at this time</div>
       ) : (
         <div className="max-h-[400px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
           {alerts.map((alert) => (
@@ -67,18 +67,18 @@ const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
             >
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle className="text-sm font-semibold">
-                Stock Agotado: {alert.name}
+                Out of Stock: {alert.name}
               </AlertTitle>
               <AlertDescription className="text-xs space-y-2">
                 <div>SKU: {alert.sku}</div>
-                <div>Stock actual: {alert.current_stock} {alert.unit_of_measure}</div>
-                <div className="font-semibold">¡Se requiere reordenar inmediatamente!</div>
+                <div>Current stock: {alert.current_stock} {alert.unit_of_measure}</div>
+                <div className="font-semibold">Immediate reorder required!</div>
                 <Button 
                   size="sm" 
                   className="mt-2 bg-red-600 hover:bg-red-700 text-white"
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
-                  Ordenar Producto
+                  Order Product
                 </Button>
               </AlertDescription>
             </Alert>
