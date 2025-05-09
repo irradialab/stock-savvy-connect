@@ -162,7 +162,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                   onClick={() => handleSort('name')}
                   className="flex items-center gap-1"
                 >
-                  Nombre
+                  Product
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
@@ -182,7 +182,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                   onClick={() => handleSort('current_stock')}
                   className="flex items-center gap-1"
                 >
-                  Stock Actual
+                  Current Stock
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
@@ -192,7 +192,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                   onClick={() => handleSort('unit_of_measure')}
                   className="flex items-center gap-1"
                 >
-                  Unidad
+                  Unit
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
@@ -202,11 +202,11 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                   onClick={() => handleSort('predicted_days_left')}
                   className="flex items-center gap-1"
                 >
-                  Días Restantes
+                  Days Left
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead>Estado</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -227,7 +227,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
                       ? 'bg-red-100 text-red-800'
                       : 'bg-green-100 text-green-800'
                   }`}>
-                    {product.needs_reorder_flag ? 'Bajo Stock' : 'Normal'}
+                    {product.needs_reorder_flag ? 'Low Stock' : 'Normal'}
                   </span>
                 </TableCell>
               </TableRow>
