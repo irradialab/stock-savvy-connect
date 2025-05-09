@@ -5,6 +5,7 @@ import { AlertTriangle, ShoppingCart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { toStringValue } from "@/lib/utils";
 
 interface InventoryAlert {
   product_id: string;
@@ -41,7 +42,13 @@ const AlertsPanel = ({ companyId }: AlertsPanelProps) => {
           return;
         }
 
-        setAlerts(data || []);
+        // Convert product_id from number to string to match InventoryAlert interface
+        const formattedData = data?.map(product => ({
+          ...product,
+          product_id: toStringValue(product.product_id)
+        })) as InventoryAlert[];
+
+        setAlerts(formattedData || []);
       } catch (error) {
         console.error('Error loading alerts:', error);
       } finally {

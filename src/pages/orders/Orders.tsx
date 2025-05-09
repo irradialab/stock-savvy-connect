@@ -71,6 +71,9 @@ const Orders = () => {
         // Get all product IDs in cart
         const productIds = cartItems.map(item => item.id);
         
+        // Convert string IDs to numbers for the database query
+        const numericProductIds = productIds.map(id => toNumberValue(id));
+        
         // Fetch supplier information for these products
         const { data, error } = await supabase
           .from('company_product_supplier_info')
@@ -84,7 +87,7 @@ const Orders = () => {
             )
           `)
           .eq('company_id', companyId)
-          .in('product_id', productIds);
+          .in('product_id', numericProductIds);
           
         if (error) {
           console.error('Error fetching supplier info:', error);
