@@ -131,7 +131,7 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
         <div className="relative flex-1">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por nombre, SKU o descripción..."
+            placeholder="Search by name, SKU or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-8"
@@ -142,12 +142,12 @@ const InventoryStatus = ({ companyId, activeTab }: InventoryStatusProps) => {
           onValueChange={(value: StockStatus) => setStockStatus(value)}
         >
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filtrar por estado" />
+            <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos los estados</SelectItem>
-            <SelectItem value="normal">Stock Normal</SelectItem>
-            <SelectItem value="low">Bajo Stock</SelectItem>
+            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="normal">Normal Stock</SelectItem>
+            <SelectItem value="low">Low Stock</SelectItem>
           </SelectContent>
         </Select>
       </div>
