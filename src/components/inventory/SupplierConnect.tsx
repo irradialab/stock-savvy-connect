@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,11 +17,12 @@ interface Supplier {
 }
 
 interface SupplierConnectProps {
-  companyId: number | null;
+  companyId?: number | null;
 }
 
 const WhatsAppSupport = () => {
   const [isMinimized, setIsMinimized] = useState(false);
+  const whatsappNumber = "+573150654118";
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -57,7 +59,7 @@ const WhatsAppSupport = () => {
               </p>
               <Button
                 className="w-full bg-[#25D366] hover:bg-[#25D366]/90 text-white"
-                onClick={() => window.open('https://wa.me/1234567890', '_blank')}
+                onClick={() => window.open(`https://wa.me/${whatsappNumber.replace('+', '')}`, '_blank')}
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Chatear por WhatsApp
