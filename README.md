@@ -1,73 +1,71 @@
-# Welcome to your Lovable project
 
-## Project info
+  # Plataforma de Gestión de Inventarios
 
-**URL**: https://lovable.dev/projects/119c491e-3fe4-4de3-b113-65b8c1dd8e0d
+Este proyecto es una aplicación web diseñada para ayudar a las empresas a gestionar eficientemente sus inventarios, pedidos y relaciones con proveedores. Permite a los usuarios autenticados acceder a información detallada sobre el estado de sus productos, realizar pedidos y contactar con proveedores.
 
-## How can I edit this code?
+## Información del Proyecto
 
-There are several ways of editing your application.
+**URL de la Aplicación (Ejemplo)**: [Accede al proyecto en Lovable](https://lovable.dev/projects/119c491e-3fe4-4de3-b113-65b8c1dd8e0d)
 
-**Use Lovable**
+## Características Principales
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/119c491e-3fe4-4de3-b113-65b8c1dd8e0d) and start prompting.
+*   **Autenticación de Usuarios**: Sistema seguro de inicio de sesión para proteger los datos de cada empresa.
+*   **Módulo de Inventario (Inventory)**:
+    *   Visualización en tabla del estado actual del inventario.
+    *   Identificación clara de productos agotados.
+    *   Alerta sobre productos próximos a agotarse.
+    *   Sugerencias de proveedores para adquirir productos requeridos.
+*   **Módulo de Pedidos (Orders)**:
+    *   Gestión de un carrito de compras para los productos seleccionados.
+    *   Interacción con una pasarela de pagos para completar las compras.
+*   **Módulo de Proveedores (Suppliers)**:
+    *   Descripción detallada de todos los proveedores disponibles.
+    *   Listado de proveedores con los que se ha interactuado recientemente.
+*   **Integración con Asistente IA vía WhatsApp**:
+    *   Enlace directo a WhatsApp Web para contactar con un agente de Inteligencia Artificial.
+    *   Consultas en tiempo real sobre el estado de los inventarios.
+    *   Obtención de información de contacto de proveedores para facilitar negociaciones.
 
-Changes made via Lovable will be committed automatically to this repo.
+## Acceso a la Aplicación
 
-**Use your preferred IDE**
+Para acceder a la plataforma, necesitarás credenciales de usuario. A continuación, se proporcionan ejemplos de usuarios para demostración:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+*   **Usuario 1**:
+    *   **Email**: `carlos.perez@cafeandino.com`
+    *   **Contraseña**: `pass123`
+*   **Usuario 2**:
+    *   **Email**: `camila.rojas@aseosexpress.co`
+    *   **Contraseña**: `pass456`
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+**Nota**: Estas credenciales son solo para fines de demostración y prueba. En un entorno de producción, se deben utilizar credenciales únicas y seguras.
 
-Follow these steps:
+## ¿Cómo puedo editar este código?
+
+Hay varias formas de editar tu aplicación.
+
+**Usar Lovable**
+
+Simplemente visita el [Proyecto Lovable](https://lovable.dev/projects/119c491e-3fe4-4de3-b113-65b8c1dd8e0d) y comienza a interactuar con las herramientas de desarrollo que provee.
+Los cambios realizados a través de Lovable se confirmarán automáticamente en este repositorio.
+
+**Usar tu IDE preferido (Desarrollo Local)**
+
+Si deseas trabajar localmente usando tu propio IDE, puedes clonar este repositorio y enviar tus cambios. Los cambios enviados también se reflejarán en Lovable.
+El único requisito es tener Node.js y npm instalados - [instalar con nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Sigue estos pasos:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Paso 1: Clona el repositorio usando la URL Git del proyecto.
+# Reemplaza <TU_URL_GIT> con la URL real de tu repositorio Git.
+git clone <TU_URL_GIT>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Paso 2: Navega al directorio del proyecto.
+# Reemplaza <NOMBRE_DE_TU_PROYECTO> con el nombre real de la carpeta del proyecto.
+cd <NOMBRE_DE_TU_PROYECTO>
 
-# Step 3: Install the necessary dependencies.
+# Paso 3: Instala las dependencias necesarias.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Paso 4: Inicia el servidor de desarrollo con recarga automática y vista previa instantánea.
 npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/119c491e-3fe4-4de3-b113-65b8c1dd8e0d) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
